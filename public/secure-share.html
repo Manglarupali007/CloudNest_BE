@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Share - CloudNest</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .share-container {
+            background: white;
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .lock-icon { font-size: 80px; margin-bottom: 20px; }
+        h1 { color: #333; margin-bottom: 10px; }
+        p { color: #666; margin-bottom: 30px; }
+        .password-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        .download-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: 600;
+        }
+        .error { color: #f72585; margin-top: 15px; }
+        .file-info { background: #f8f9fa; padding: 15px; border-radius: 12px; margin-bottom: 20px; }
+        .loader { display: none; margin: 20px auto; width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #667eea; border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .success-icon { color: #10b981; font-size: 60px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div class="share-container" id="shareContainer">
+        <div class="lock-icon">🔒</div>
+        <h1>Secure File Access</h1>
+        <p id="message">Verifying secure link...</p>
+        <div class="file-info" id="fileInfo" style="display:none"></div>
+        <input type="password" id="passwordInput" class="password-input" placeholder="Enter password" style="display:none">
+        <button class="download-btn" id="downloadBtn" style="display:none" onclick="downloadFile()">Download File</button>
+        <div class="loader" id="loader"></div>
+        <div class="error" id="errorMsg"></div>
+    </div>
+
+    <script>
+        let shareId = window.location.pathname.split('/').pop();
+        let fileData = null;
+
+        async function init() {
+            try {
+                const res = await fetch(`/secure-share/${shareId}`, { 
+                    method: 'POST', 
+                    body: JSON.stringify({}), 
+                    headers: { 'Content-Type': 'application/json' } 
+                });
+                const data = await res.json();
+                
+                if (data.requirePassword) {
+                    document.getElementById('message').innerHTML = '🔐 This file is password protected';
+                    document.getElementById('passwordInput').style.display = 'block';
+                    document.getElementById('downloadBtn').innerHTML = 'Verify & Download';
+                    document.getElementById('downloadBtn').style.display = 'block';
+                    fileData = data;
+                } else if (data.success) {
+                    document.getElementById('message').innerHTML = '✅ Secure link verified!';
+                    document.getElementById('fileInfo').innerHTML = `<strong>📄 ${data.originalName}</strong>`;
+                    document.getElementById('fileInfo').style.display = 'block';
+                    document.getElementById('downloadBtn').style.display = 'block';
+                    fileData = data;
+                } else {
+                    document.getElementById('message').innerHTML = '❌ ' + data.message;
+                }
+            } catch(err) {
+                document.getElementById('message').innerHTML = '❌ Invalid or expired share link';
+            }
+        }
+
+        async function downloadFile() {
+            const password = document.getElementById('passwordInput').value;
+            document.getElementById('loader').style.display = 'block';
+            document.getElementById('errorMsg').innerHTML = '';
+            
+            try {
+                const res = await fetch(`/secure-share/${shareId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password })
+                });
+                const data = await res.json();
+                
+                if (data.success) {
+                    window.location.href = `/secure-share/download/${shareId}`;
+                } else {
+                    document.getElementById('errorMsg').innerHTML = data.message;
+                    document.getElementById('loader').style.display = 'none';
+                }
+            } catch(err) {
+                document.getElementById('errorMsg').innerHTML = 'Download failed';
+                document.getElementById('loader').style.display = 'none';
+            }
+        }
+
+        init();
+    </script>
+</body>
+</html>
