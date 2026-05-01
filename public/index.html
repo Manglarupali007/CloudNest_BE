@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CloudNest - Premium Cloud Storage</title>
+    <!-- <link rel="stylesheet" href="/css/style.css"> -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -17,7 +18,6 @@
         body.light-mode { background: linear-gradient(135deg, #e0e0e0 0%, #ffffff 100%); }
         .app-container { display: flex; min-height: 100vh; }
         
-        /* Sidebar */
         .sidebar {
             width: 280px;
             background: rgba(15, 25, 35, 0.95);
@@ -61,7 +61,6 @@
         .progress-bar { background: rgba(255, 255, 255, 0.2); border-radius: 10px; height: 8px; overflow: hidden; margin: 10px 0; }
         .progress-fill { background: linear-gradient(90deg, #667eea, #764ba2); height: 100%; border-radius: 10px; transition: width 0.5s ease; width: 0%; }
         
-        /* Main Content */
         .main-content { margin-left: 280px; flex: 1; padding: 20px 30px; min-height: 100vh; }
         .page-container { display: none; animation: fadeIn 0.4s ease; }
         .page-container.active-page { display: block; }
@@ -77,7 +76,7 @@
             align-items: center;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
-        .page-title h1 { font-size: 28px; background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .page-title h1 { font-size: 28px; color: #333; }
         .user-info { display: flex; align-items: center; gap: 15px; }
         .user-name { font-weight: 600; color: #667eea; font-size: 16px; }
         .logout-btn { background: #f72585; color: white; border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; font-weight: 600; }
@@ -118,7 +117,6 @@
         .file-tags { margin-top: 10px; display: flex; gap: 5px; flex-wrap: wrap; }
         .tag { background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1)); padding: 4px 12px; border-radius: 20px; font-size: 11px; color: #667eea; }
         
-        /* Analytics */
         .analytics-container { display: flex; flex-direction: column; gap: 25px; }
         .analytics-header { background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 20px; padding: 30px; color: white; }
         .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
@@ -140,7 +138,6 @@
         .activity-bar { height: 8px; background: #e0e0e0; border-radius: 10px; overflow: hidden; }
         .activity-bar-fill { height: 100%; background: linear-gradient(90deg, #667eea, #764ba2); border-radius: 10px; }
         
-        /* AI Tools */
         .ai-suggestions-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; margin: 20px 0; }
         .suggestion-card { background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1)); padding: 15px; border-radius: 14px; cursor: pointer; text-align: center; font-weight: 500; }
         .suggestion-card:hover { background: linear-gradient(135deg, #667eea, #764ba2); color: white; transform: translateY(-3px); }
@@ -148,7 +145,6 @@
         .ai-query-box input { flex: 1; padding: 15px; border: 2px solid #e0e0e0; border-radius: 14px; font-size: 16px; }
         .ai-insight { background: linear-gradient(135deg, #667eea15, #764ba215); border-left: 4px solid #667eea; padding: 20px; border-radius: 12px; margin: 20px 0; }
         
-        /* Settings */
         .settings-card { background: rgba(255, 255, 255, 0.95); border-radius: 20px; padding: 30px; }
         .settings-option { display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid #e0e0e0; }
         .settings-option-left { display: flex; align-items: center; gap: 15px; }
@@ -160,7 +156,6 @@
         select { padding: 10px 20px; border-radius: 12px; border: 2px solid #e0e0e0; }
         .upgrade-btn { background: linear-gradient(135deg, #f093fb, #f5576c); color: white; border: none; padding: 10px 25px; border-radius: 10px; cursor: pointer; }
         
-        /* Modals */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(8px); z-index: 1000; justify-content: center; align-items: center; }
         .modal-content { background: white; border-radius: 24px; max-width: 450px; width: 90%; padding: 30px; animation: modalSlideIn 0.3s ease; }
         @keyframes modalSlideIn { from { transform: translateY(-50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
@@ -205,11 +200,10 @@
 
         <main class="main-content">
             <div class="top-header">
-                <div class="page-title"><h1 id="pageTitle">My Files</h1></div>
+                <div class="page-title"><h1 id="pageTitle">📁 My Files</h1></div>
                 <div class="user-info"><span class="user-name" id="userName"></span><button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button></div>
             </div>
 
-            <!-- Files Page -->
             <div id="filesPage" class="page-container active-page">
                 <div class="stats-grid">
                     <div class="stat-card" onclick="showPage('analytics')"><div class="stat-value" id="totalFiles">0</div><div>Total Files</div></div>
@@ -232,13 +226,9 @@
                 <div id="fileGrid" class="file-grid"><div class="empty-state"><i class="fas fa-cloud-upload-alt"></i><h3>No files yet</h3><p>Upload your first file</p></div></div>
             </div>
 
-            <!-- Favourites Page -->
             <div id="favouritesPage" class="page-container"><div class="file-grid" id="favouritesGrid"><div class="empty-state"><i class="fas fa-heart"></i><h3>No favourites yet</h3><p>Click heart icon to add favourites</p></div></div></div>
-
-            <!-- Recent Page -->
             <div id="recentPage" class="page-container"><div class="file-grid" id="recentGrid"><div class="empty-state"><i class="fas fa-clock"></i><h3>No recent files</h3><p>Recent files will appear here</p></div></div></div>
 
-            <!-- Analytics Page -->
             <div id="analyticsPage" class="page-container">
                 <div class="analytics-container">
                     <div class="analytics-header"><h2><i class="fas fa-chart-line"></i> Storage Analytics Dashboard</h2><p>Real-time insights about your cloud storage usage</p></div>
@@ -258,7 +248,6 @@
                 </div>
             </div>
 
-            <!-- AI Tools Page -->
             <div id="aitoolsPage" class="page-container">
                 <div class="settings-card" style="margin-bottom:25px">
                     <h3><i class="fas fa-microphone"></i> Ask AI Assistant</h3>
@@ -271,7 +260,6 @@
                 <div class="settings-card"><h3><i class="fas fa-search"></i> Search Results</h3><div id="aiResults"></div></div>
             </div>
 
-            <!-- Settings Page -->
             <div id="settingsPage" class="page-container">
                 <div class="settings-card">
                     <div class="settings-option"><div class="settings-option-left"><i class="fas fa-moon"></i><div><h4>Dark/Light Mode</h4><p>Switch theme</p></div></div><div class="toggle-switch" id="themeToggle" onclick="toggleTheme()"></div></div>
@@ -284,7 +272,6 @@
         </main>
     </div>
 
-    <!-- Auth Modal -->
     <div class="modal" id="authModal">
         <div class="modal-content">
             <div class="modal-header"><h2 id="authTitle">Login to CloudNest</h2><button class="modal-close" onclick="closeModal('authModal')">&times;</button></div>
@@ -298,7 +285,6 @@
         </div>
     </div>
 
-    <!-- Share Modal -->
     <div class="modal" id="shareModal">
         <div class="modal-content">
             <div class="modal-header"><h3><i class="fas fa-share-alt"></i> Share File</h3><button class="modal-close" onclick="closeModal('shareModal')">&times;</button></div>
@@ -309,7 +295,6 @@
         </div>
     </div>
 
-    <!-- Tag Modal -->
     <div class="modal" id="tagModal">
         <div class="modal-content">
             <div class="modal-header"><h3><i class="fas fa-tag"></i> Add Tags</h3><button class="modal-close" onclick="closeModal('tagModal')">&times;</button></div>
@@ -401,6 +386,7 @@
                 <div class="file-card">
                     <div class="file-actions">
                         <button class="file-action-btn" onclick="toggleFavourite('${file._id}')" style="color: ${file.isFavourite ? '#f8961e' : '#666'}"><i class="fas fa-heart"></i></button>
+                        <button class="file-action-btn" onclick="downloadFile('${file._id}', '${escapeHtml(file.originalName)}')" title="Download"><i class="fas fa-download"></i></button>
                         <button class="file-action-btn" onclick="openTagModal('${file._id}')"><i class="fas fa-tag"></i></button>
                         <button class="file-action-btn" onclick="openShareModal('${file._id}')"><i class="fas fa-share-alt"></i></button>
                         <button class="file-action-btn" onclick="deleteFile('${file._id}')"><i class="fas fa-trash"></i></button>
@@ -411,6 +397,19 @@
                     ${file.tags && file.tags.length ? `<div class="file-tags">${file.tags.map(t => `<span class="tag">#${escapeHtml(t)}</span>`).join('')}</div>` : ''}
                 </div>
             `;
+        }
+
+        function downloadFile(fileId, fileName) {
+            const file = allFiles.find(f => f._id === fileId);
+            if (!file) { showToast('File not found', 'error'); return; }
+            showToast(`Downloading ${fileName}...`, 'info');
+            const link = document.createElement('a');
+            link.href = `/uploads/${file.filename}`;
+            link.download = file.originalName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast(`✅ Downloaded ${fileName}`, 'success');
         }
 
         async function uploadFile(input) {
@@ -557,13 +556,24 @@
             document.getElementById('aiResults').innerHTML = resultsHTML;
         }
 
+        // ========== UPDATED SHOW PAGE FUNCTION - NO DOUBLE EMOJIS ==========
         function showPage(page) {
             document.querySelectorAll('.page-container').forEach(p => p.classList.remove('active-page'));
             document.getElementById(`${page}Page`).classList.add('active-page');
             document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
             if (event && event.target) event.target.classList.add('active');
-            const titles = { files: 'My Files', favourites: '❤️ My Favourites', recent: '🕐 Recent Files', analytics: '📊 Analytics Dashboard', aitools: '🤖 AI Assistant', settings: '⚙️ Settings' };
-            document.getElementById('pageTitle').innerHTML = `<i class="fas ${page === 'files' ? 'fa-folder' : page === 'favourites' ? 'fa-heart' : page === 'recent' ? 'fa-clock' : page === 'analytics' ? 'fa-chart-line' : page === 'aitools' ? 'fa-robot' : 'fa-cog'}"></i> ${titles[page]}`;
+            
+            const titles = { 
+                files: '📁 My Files', 
+                favourites: '❤️ My Favourites', 
+                recent: '🕐 Recent Files', 
+                analytics: '📊 Analytics Dashboard', 
+                aitools: '🤖 AI Assistant', 
+                settings: '⚙️ Settings' 
+            };
+            
+            document.getElementById('pageTitle').innerHTML = titles[page];
+            
             if (page === 'files') updateFilesPage(currentFilter === 'all' ? allFiles : allFiles.filter(f => f.mimeType.includes(currentFilter)));
             if (page === 'analytics') setTimeout(() => loadStats(), 100);
         }
