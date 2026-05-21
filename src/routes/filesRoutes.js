@@ -2,11 +2,17 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const fs = require('fs');
+const path = require('path');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
+
+const uploadDir = path.join(__dirname, '..', 'uploads');
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+}
 
 // Auth middleware
 const auth = async (req, res, next) => {
@@ -29,14 +35,9 @@ const auth = async (req, res, next) => {
     }
 };
 
-// Ensure uploads folder exists
-if (!fs.existsSync('./uploads')) {
-    fs.mkdirSync('./uploads');
-}
-
 // Multer setup (local storage - fallback)
 const storage = multer.diskStorage({
-    destination: './uploads/',
+    destination: uploadDir,
     filename: (req, file, cb) => {
         cb(null, Date.now() + '-' + file.originalname);
     }
