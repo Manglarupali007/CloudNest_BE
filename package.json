@@ -13,7 +13,9 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:studio": "prisma studio",
-    "prisma:push": "prisma db push"
+    "prisma:push": "prisma db push",
+    "postinstall": "npx prisma generate",
+    "vercel-build": "npx prisma generate"
   },
   "keywords": [
     "cloud-storage",
@@ -43,7 +45,8 @@
     "mongoose": "^9.6.2",
     "multer": "^1.4.5-lts.1",
     "multer-storage-cloudinary": "^4.0.0",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "serverless-http": "^3.0.0"
   },
   "devDependencies": {
     "jest": "^29.7.0",
@@ -55,6 +58,9 @@
     "testEnvironment": "node",
     "testMatch": [
       "**/src/tests/**/*.test.js"
+    ],
+    "setupFilesAfterEnv": [
+      "<rootDir>/src/tests/setup.js"
     ],
     "verbose": true,
     "forceExit": true,

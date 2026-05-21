@@ -31,8 +31,8 @@ app.get('*', (req, res) => {
 // Global error handler
 app.use(errorHandler);
 
-// Start server only if not in test environment
-if (process.env.NODE_ENV !== 'test') {
+// Start server only when this file is executed directly
+if (require.main === module) {
     const PORT = process.env.PORT || 3000;
     app.listen(PORT, () => {
         console.log(`🚀 Server running on http://localhost:${PORT}`);
@@ -40,5 +40,5 @@ if (process.env.NODE_ENV !== 'test') {
     });
 }
 
-// Export for testing
+// Export for serverless and testing
 module.exports = app;
