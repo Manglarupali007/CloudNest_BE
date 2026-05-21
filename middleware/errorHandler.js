@@ -15,11 +15,26 @@ const errorHandler = (err, req, res, next) => {
     const message = 'Duplicate field value entered';
     error = { message, statusCode: 400 };
   }
+
+  // Prisma duplicate field / unique constraint
+  if (err.code === 'P2002') {
+    const message = 'Duplicate field value entered';
+    error = { message, statusCode: 400 };
+  }
   
-  // Mongoose validation error
+  // Validation errors
   if (err.name === 'ValidationError') {
     const message = Object.values(err.errors).map(val => val.message).join(', ');
     error = { message, statusCode: 400 };
+  }
+
+  // File upload / disk errors
+  if (err.name === 'MulterError') {
+    error = { message: err.message, statusCode: 400 };
+  }
+
+  if (err.code === 'ENOENT') {
+    error = { message: 'Requested file was not found on the server', statusCode: 404 };
   }
   
   res.status(error.statusCode || 500).json({

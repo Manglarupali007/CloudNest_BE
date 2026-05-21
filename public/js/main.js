@@ -182,16 +182,18 @@ function displayFiles(files) {
         return;
     }
     
-    grid.innerHTML = files.map(file => `
-        <div class="file-card" data-file-id="${file._id}">
+    grid.innerHTML = files.map(file => {
+        const fileId = String(file.id || file._id);
+        return `
+        <div class="file-card" data-file-id="${fileId}">
             <div class="file-actions">
-                <button class="file-action-btn favourite-btn ${file.favourite ? 'active' : ''}" onclick="toggleFavourite('${file._id}')">
-                    <i class="fas ${file.favourite ? 'fa-heart' : 'fa-heart'}"></i>
+                <button class="file-action-btn favourite-btn ${file.isFavourite ? 'active' : ''}" onclick="toggleFavourite('${fileId}')">
+                    <i class="fas ${file.isFavourite ? 'fa-solid fa-heart' : 'fa-regular fa-heart'}"></i>
                 </button>
-                <button class="file-action-btn" onclick="openShareModal('${file._id}')">
+                <button class="file-action-btn" onclick="openShareModal('${fileId}')">
                     <i class="fas fa-share-alt"></i>
                 </button>
-                <button class="file-action-btn" onclick="deleteFile('${file._id}')">
+                <button class="file-action-btn" onclick="deleteFile('${fileId}')">
                     <i class="fas fa-trash"></i>
                 </button>
             </div>

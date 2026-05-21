@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  password     String
+  storageUsed  Int      @default(0)
+  storageLimit Int      @default(104857600)
+  theme        String   @default("dark")
+  createdAt    DateTime @default(now())
+  
+  files File[]
+}
+
+model File {
+  id           String   @id @default(cuid())
+  filename     String
+  originalName String
+  path         String
+  size         Int
+  mimeType     String
+  isFavourite  Boolean  @default(false)
+  shareLink    String?  @unique
+  shareExpiry  DateTime?
+  downloads    Int      @default(0)
+  tags         String   @default("")    // Comma separated tags: "work,important,urgent"
+  ownerId      String
+  createdAt    DateTime @default(now())
+  
+  owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+}
